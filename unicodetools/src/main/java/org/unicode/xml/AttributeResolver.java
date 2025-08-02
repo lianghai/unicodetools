@@ -158,8 +158,9 @@ public class AttributeResolver {
             case String:
                 switch (prop) {
                     case Equivalent_Unified_Ideograph:
-                        String EqUIdeo = getMappingValue(codepoint, resolvedValue, false, "");
-                        return (EqUIdeo.equals("#")) ? null : EqUIdeo;
+                    case kEH_AltSeq:
+                        String ignoreHash = getMappingValue(codepoint, resolvedValue, false, "");
+                        return (ignoreHash.equals("#")) ? null : ignoreHash;
                     case kCompatibilityVariant:
                         String kCompatibilityVariant =
                                 getMappingValue(codepoint, resolvedValue, false, "U+");
@@ -213,6 +214,14 @@ public class AttributeResolver {
                         return Optional.ofNullable(resolvedValue).orElse("");
                     case kDefinition:
                         return resolvedValue;
+                    case kEH_Func:
+                        if (resolvedValue != null) {
+                            return resolvedValue.replaceAll("[|]+", "/");
+                        }
+                    case kEH_FVal:
+                        if (resolvedValue != null) {
+                            return resolvedValue.replaceAll("[|]+", " | ");
+                        }
                     default:
                         if (resolvedValue != null) {
                             return resolvedValue.replaceAll("\\" + SET_SEPARATOR, " ");
@@ -355,6 +364,6 @@ public class AttributeResolver {
     }
 
     public boolean isUnikemetAttributeRange(int codepoint) {
-        return !getAttributeValue(UcdProperty.kEH_Cat, codepoint).isEmpty();
+        return getAttributeValue(UcdProperty.Block, codepoint).startsWith("Egyptian_Hieroglyph");
     }
 }

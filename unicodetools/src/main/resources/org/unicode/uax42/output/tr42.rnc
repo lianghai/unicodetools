@@ -151,7 +151,6 @@
                   | "Cherokee"
                   | "Cherokee_Sup"
                   | "Chess_Symbols"
-                  | "Chisoi"
                   | "Chorasmian"
                   | "CJK"
                   | "CJK_Compat"
@@ -694,8 +693,8 @@
            | "Avst"
            | "Bali" | "Bamu" | "Bass" | "Batk" | "Beng" | "Berf"
            | "Bhks" | "Bopo" | "Brah" | "Brai" | "Bugi" | "Buhd"
-           | "Cakm" | "Cans" | "Cari" | "Cham" | "Cher" | "Chis"
-           | "Chrs" | "Copt" | "Cpmn" | "Cprt" | "Cyrl"
+           | "Cakm" | "Cans" | "Cari" | "Cham" | "Cher" | "Chrs"
+           | "Copt" | "Cpmn" | "Cprt" | "Cyrl"
            | "Deva" | "Diak" | "Dogr" | "Dsrt" | "Dupl"
            | "Egyp" | "Elba" | "Elym" | "Ethi"
            | "Gara" | "Geor" | "Glag" | "Gong" | "Gonm" | "Goth"
@@ -1373,13 +1372,15 @@
     { xsd:string { pattern='[^\t"]+' } }?
 
   code-point-attributes &= attribute kEH_Func
-    { xsd:string { pattern='[^\t"]+' } }?
+    { list { ("/" | xsd:string { pattern='[^\t"]+' } )+} }?
 
-  code-point-attributes &=
-    attribute kEH_FVal { text }?
+  code-point-attributes &= attribute kEH_FVal
+    { list { ("|" | xsd:string { pattern="[bdf-hjkmnpr-twy\.,/\-\+=;?>&\(\)\{\}\s\x{303}\x{30C}\x{323}\x{32E}\x{331}\x{A723}\x{A725}\x{A7BD}]+" } )+} }?
 
   code-point-attributes &= attribute kEH_UniK
-    { xsd:string { pattern="([A-IK-Z]|AA|NL|NU)\d{3}[A-Z]{0,2}|HJ ([A-IK-Z]|AA)\d{3}[A-Z]{0,2}" } }?
+    { xsd:string { pattern="([A-IK-Z]|AA|NL|NU)\d{3}[A-Z]{0,2}" }
+     | xsd:string { pattern="HJ ([A-IK-Z]|AA)\d{3}[A-Z]{0,2}" }
+    }?
 
   code-point-attributes &= attribute kEH_JSesh
     { list { ( xsd:string { pattern="([A-IK-Z]|Aa|NL|NU|Ff)\d{1,3}[A-Za-z]{0,5}" }
@@ -1398,8 +1399,8 @@
   code-point-attributes &=
     attribute kEH_NoRotate { boolean }?
 
-  code-point-attributes &=
-    attribute kEH_AltSeq { text }?
+  code-point-attributes &= attribute kEH_AltSeq
+    { xsd:string { pattern="[0-9A-F]{5}(\s[0-9A-F]{4,5})*" } }?
 
       
   ucd.content &=
